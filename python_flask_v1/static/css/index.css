@@ -1,0 +1,173 @@
+.ajax-loader 
+{
+	visibility: hidden;
+	background-color: rgba(255,255,255,0.7);
+	position: relative;
+	z-index: +200;
+	width: 100%;
+	height:100%;
+}
+
+.ajax-loader img 
+{
+	position: relative;
+	top:0%;
+	left:0%;
+}
+
+*{
+	margin:0;
+	padding:0;
+}
+
+header
+{
+	#height: 80px;
+	background-size:cover;
+	background-position:center;
+}
+body{
+	background-image:url(/static/images/background.jpg);
+	#liner-gradient(rgba(0,0,100,0.5),rgba(0,0,0,0.5))
+}
+
+.nav-bar{
+	background : rgb(0,0,0,0.5);
+	height: 60px;
+	#border: 1px solid red;
+}
+
+ul{
+	#padding-top: 25px;
+	#border: 1px solid red;
+	margin :10px 5px;
+	position: relative; top: -10px;
+}
+
+.logo{
+	margin: 10 px 50 px;
+	height:120px;
+}
+
+
+
+.menu{
+	float:right;
+	list-style:none;
+	margin:20px;
+}
+
+.menu li{
+	display: inline-block;
+	margin :10px 5px;
+	
+}
+
+.menu li a{
+	text-decoration:none;
+	color: #ffff;
+	padding: 5px 10px;
+	font-family: sans-serif;
+	letter-spacing: 2px;
+	border: 1px solid #ffff;
+	
+}
+
+.menu li a:hover{
+	background: #ffff;
+	transition: .4s;
+	color: blue;	
+}
+
+.footer-menu{
+	float:right;
+	list-style:none;
+	margin:20px;
+}
+
+.footer-menu li{
+	display: inline-block;
+	margin :10px 5px;
+	
+}
+
+.footer-menu li a{
+	text-decoration:none;
+	color: blue;
+	padding: 10px 15px;
+	font-family: sans-serif;
+	letter-spacing: 2px;
+	#border: 1px solid #ffff;
+	background: #fff;
+}
+
+.footer-menu li a:hover{
+	transition: .4s;
+	color: black;
+}
+
+
+.welcome{
+	position: relative;
+	text-align:center;
+	font-family:sans-serif;
+	color: #fff;
+	top: 160px;
+}
+
+.welcome h1{
+	font-size:42px;
+	margin:25px;
+}
+
+.btn{
+	font-size: 18px;
+	letter-spacing: 2px;
+	margin: 5px;
+	padding: 7px 10px;
+	text-decoration:none;
+	border: 1px solid #fff;
+	border-radius:5px
+}
+
+div{
+	
+	#border: 1px solid red;
+}
+
+a{
+	border-radius:5px
+}
+
+.btn1{	
+	background: #fff;
+	color:#000;
+	
+}
+
+.btn2{
+	color: #fff;	
+}
+
+.btn2:hover{	
+	background: #fff;
+	color:#000;
+	transition:.4s;
+}
+
+footer{
+	#top: 505px;
+    #position: relative;
+	#border: 1px solid green;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+.footer-bar{
+	#border: 1px solid yellow;
+	height: 80px
+}
+
+
+

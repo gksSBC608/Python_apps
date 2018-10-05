@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+			<title>Remove Payee</title>
+			<script src="javascript/jquery.min.js"></script>
+			<script>
+				var submit_btn;
+				function do_initials(){
+					submit_btn = $("input[type='submit']");
+					submit_btn.prop('disabled', false);
+					var payee_acc_name_field = $("input#payee_acc_name1");
+					var payee_acc_bank_field = $("input#payee_acc_bank1");
+					payee_acc_name_field.prop('disabled', true);
+					payee_acc_bank_field.prop('disabled', true);
+					var curr_url = new URL(window.location.href);
+					//console.log(curr_url);
+					var username = curr_url.searchParams.get("username");
+					var acc_number = curr_url.searchParams.get("acc_number");
+					$("input[name='username']").val(username);
+					var home_link_el = $("[href='home']");
+					var home_url = "server/controller_action.py/render_dashboard?username="+username;
+					home_link_el.attr('href', home_url);
+					//console.log(username+', '+acc_number)
+					if(username==null || acc_number==null){
+						alert("access denied")
+						$("input").prop('disabled', true);
+					}else{
+						//console.log(username+', '+acc_number)
+						//document.getElementById("acc_number").value=acc_number;
+						//document.getElementById("user_id").value=username;
+						//document.getElementById("acc_number_label").innerHTML=acc_number;
+												
+						var beneficiaries_url = "server/controller_action.py/getpayee_accounts?username="+username;
+						$.get(beneficiaries_url, function(data, status){
+							
+							console.log(data);
+							console.log(data.length);
+				
+							if(data.length<=6){
+								alert("Payee not added");
+								submit_btn.prop('disabled', true);
+							}
+							json = JSON.parse(data);
+							console.log("json is "+json);
+							var select_str = "<select id='payee_acc_number' style='width: 167px;' onchange='load_payee_info()'>";
+							var options ="<option value='---'>---select---</option>";
+							json.forEach(function(item){
+							//console.log(item);
+							var option = "<option value="+item+">"+item+"</option>";
+							options += option;
+							});
+							//console.log(options);
+							select_str += options+"</select>";
+							//console.log(select_str);
+							document.getElementById("acc_list").innerHTML=select_str;
+						});
+						
+					}			
+				
+				}
+				
+				function validate_input(){
+					var payee_acc_number = document.getElementById("payee_acc_number").value;
+					//console.log(payee_acc_number);
+					if("---"===payee_acc_number){
+						alert("Select a payee account number");
+						return false;
+					}else{
+						return true;
+					}
+					
+				}
+				
+				function load_payee_info(){
+					
+					var payee_acc_number = document.getElementById("payee_acc_number").value;
+					console.log(payee_acc_number);
+					if("---"===payee_acc_number){
+						document.getElementById("payee_acc_name").value= '';
+						document.getElementById("payee_acc_bank").value= '';
+						document.getElementById("payee_acc_number_text").value ='';
+					}else{
+						document.getElementById("payee_acc_number_text").value = payee_acc_number;
+						var url = "server/controller_action.py/getpayee_data?payee_acc_number="+payee_acc_number;
+						$.get(url, function(data, status){
+							//console.log(data);
+							json = JSON.parse(data);
+							//console.log(json);
+							document.getElementById("payee_acc_name").value= json.ben_name;
+							document.getElementById("payee_acc_name1").value= json.ben_name;
+							document.getElementById("payee_acc_bank1").value= json.bank_name;
+							document.getElementById("payee_acc_bank").value= json.bank_name;
+						
+						});
+					}
+					
+				}
+			</script>
+
+		</head>
+		<body onload="do_initials()">
+			<div  align=right>
+				<a href="home">Home Page</a>
+			</div>
+			<div id="header" align="center">
+				<h2>Remove Payee</h2>
+			</div>
+			<div align = center>
+			<form action="server/controller_action.py/remove_payee" method="post">
+				<input type="hidden" name="acc_number" id = "acc_number">
+				<input type="hidden" name="payee_acc_number" id = "payee_acc_number_text">
+				<input type="hidden" name="username" id = "username">
+				<table>
+					<tr><th></th></tr>
+					
+					<tr>
+						<td>Payee Account Number</td>
+						<td><!--<input type="text" name="payee_acc_number" required>--><span id ="acc_list"></span></td>
+					</tr>
+					<tr>
+						<td>Payee Account Name</td>
+						<td>
+						<input type="hidden" name="payee_acc_name" id="payee_acc_name" required>
+						<input type="text" name="payee_acc_name1" id="payee_acc_name1" required>
+						</td>
+					</tr>
+					<tr>
+						<td>Payee Account Bank</td>
+						<td>
+						<input type="hidden" name="payee_acc_bank" id="payee_acc_bank" required>
+						<input type="text" name="payee_acc_bank1" id="payee_acc_bank1" required>
+						</td>
+					</tr>
+					
+					<tr>
+						<td><input type="submit" value="Remove Payee" onclick="return validate_input()" /></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+			</div>
+		</body>
+	</html>

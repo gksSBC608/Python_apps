@@ -1,0 +1,46 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+		
+		<div align="center" style="height:40px">
+			<h5>
+				<span id="message"></span>
+			</h5>
+		</div>
+		<div align="center">
+		<form class="input-form">				
+				<table>
+					<tr><th colspan=2>Add Payee</th></tr>
+					<tr>
+						<td class="lcolumn">
+							<label for="payee_acc_no"> Payee Account Number </label>
+						</td>
+						<td class="rcolumn"><input type="text" name="payee_acc_no" placeholder = "10 digits" required onchange="check_account_number()"></td>
+						<span id = "acc_no_error"></span>
+					</tr>
+					<tr>
+						<td class="lcolumn">
+							<label for="payee_acc_name">Payee Account Name</label>
+						</td>
+						<td class="rcolumn"><input type="text" name="payee_acc_name" placeholder = "Title Case" required></td>
+					</tr>
+					<tr>
+						<td class="lcolumn">
+							<label for="payee_acc_bank">Payee Account Bank</label>
+						</td>
+						<td class=""><input type="text" name="payee_acc_bank" placeholder = "(Title Case)" required></td>
+					</tr>
+					<tr>
+						<td class="lcolumn">
+						<button type='button' onclick="process_addpayee()">Add Payee</button>
+						</td>
+						<td class="rcolumn">
+						<button type='reset' >Reset Data</button>
+						</td>
+						
+					</tr>
+				</table>
+			</form>
+			</div>
+			<script src="/static/js/addpayee.js" charset="utf-8"></script>
+{% endblock %}

@@ -1,0 +1,21 @@
+		<header>
+		
+			<div class="nav-bar"> 
+				<a href="/" class="logo" ><img src="/static/images/logo.png" ></a>
+				
+				<ul class="menu menu-header">
+					<li><a href="">Credit Cards</a></li>
+					<li><a href="">Loans</a></li>
+					<li><a href="">Corporate</a></li>
+					<li><a href="">Products</a></li>
+					{% if message=="register" %}			
+					<li><a href="register">Register</a></li>
+					{% else %}
+					<li><a href="login">Login</a></li>
+					{%endif %}
+					<li><a href="">NRI</a></li>
+					
+				</ul>
+				
+			</div> 
+		</header>

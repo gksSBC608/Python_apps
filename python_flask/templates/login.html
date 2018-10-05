@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Home Page </title>
+		<link rel="stylesheet" href="/static/css/lib/bootstrap.min.css">
+		<link rel="stylesheet" href="/static/css/login.css">
+		
+	</head>
+	<body >
+	
+		<div id="header"></div>
+	
+		<div class= "input-form">
+		<img src="/static/images/user_avatar.png" class="avatar">
+		<h1>Login Here</h1>
+		<form  action="login" method="post" >
+			<p>Username</p>
+			<input type="text" name="username" required>
+			<p>Password</p>
+			<input type="password" name="password" required>
+			<input type="submit" value="Login" />
+			<a href="password.reset" >Forgot Password</a>
+		</form>
+		</div>
+		
+		<script src="/static/js/lib/jquery.min.js" charset="utf-8"></script>
+		<script src="/static/js/lib/bootstrap.min.js" charset="utf-8"></script>
+		<script src="/static/js/login.js" charset="utf-8"></script>
+		
+		
+	</body>
+</html>

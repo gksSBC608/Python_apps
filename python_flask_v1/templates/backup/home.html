@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body onload=init()>
+<!--
+{{profile['username'] }}
+{% if user is defined %}
+{{user}}
+{%endif %}
+-->
+{% if profile is not defined %}
+
+
+{% else %}
+<div align="right">
+<a href="{{ url_for('logout') }}">Logout</a>
+</div>
+<div align = center>
+	<table border =1>
+		{% for key,value in profile.items() %}
+		<tr><td>{{key}}</td><td> {{ value }}</td></tr>
+		{% endfor %}
+	</table>
+</div>
+<div align = center>
+	
+	<!--  <a href="{{ url_for('add_payee') }}">Add Payee</a> -->
+	<button type='button' onclick="window.location.href='/payee.add'">Add Payee</button>
+	<button type='button' onclick="window.location.href='/payee.remove'">Remove Payee</button>
+	<button type='button' onclick="window.location.href='/money.transfer'">Transfer Money</button>
+	<button type='button' onclick="window.location.href='/money.deposit'">Deposit Money</button>
+</div>
+{%endif %}
+<script src="/static/js/script.js" charset="utf-8"></script>
+<script src="/static/js/lib/jquery.min.js" charset="utf-8"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</body>
+</html>

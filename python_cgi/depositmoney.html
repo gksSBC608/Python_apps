@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+			<title>Deposit Money</title>
+			<script src="javascript/jquery.min.js"></script>
+			<script>
+				var acc_number;
+				function do_initials(){
+					var curr_url = new URL(window.location.href);
+					var username = curr_url.searchParams.get("username");
+					//$("input[name='username']").val(username);
+				    acc_number = curr_url.searchParams.get("acc_number");
+					var home_link_el = $("[href='home']");
+					var home_url = "server/controller_action.py/render_dashboard?username="+username;
+					home_link_el.attr('href', home_url);
+					//console.log(username+', '+acc_number)
+					if(username==null || acc_number==null){
+						alert("access denied")
+						$("input").prop('disabled', true);
+					}else{
+						document.getElementById("acc_number").value=acc_number;
+						document.getElementById("username").value=username;
+						document.getElementById("acc_number_label").innerHTML=acc_number;
+						var url = "server/controller_action.py/accountbalance?acc_number="+acc_number;
+						$.get(url, function(data, status){
+							//console.log(data);
+							json = JSON.parse(data);
+							//console.log("Data: " + json + "\nStatus: " + status);
+							 var balance = json.balance;
+							 available_balance = balance;
+							 document.getElementById("acc_balance").innerHTML=json.balance;
+							
+						});
+					}
+				}
+				
+				function deposit_money(){
+					$("span[id='message']").html('');
+					var username = document.getElementById('username').value;
+					var amount = $("input[name='amount']").val();
+					//alert(username+","+amount+","+acc_number);
+					console.log(amount);
+					if(amount===''){
+						$("span[id='message']").html("<font color=red>Enter amount</font>");
+						document.getElementById('amount').focus();
+					}else{
+						$.post("server/controller_action.py/deposit_money",
+						{
+							username: username,
+							acc_number: acc_number,
+							amount:amount
+						},
+						function(data,status){
+							console.log("Data: " + data + "\nStatus: " + status);
+							$("span[id='message']").html(data);
+							$("input[name='amount']").val('');
+						});
+						var url = "server/controller_action.py/accountbalance?acc_number="+acc_number;
+						$.get(url, function(data, status){
+							//console.log(data);
+							json = JSON.parse(data);
+							//console.log("Data: " + json + "\nStatus: " + status);
+							 var balance = json.balance;
+							 available_balance = balance;
+							 document.getElementById("acc_balance").innerHTML=json.balance;
+							 if(balance<=threshold_balance){
+							  $("input").prop('disabled', true);
+							  alert("low balance, must be more than "+threshold_balance);
+							 }
+							
+						});
+					}				
+					
+				}
+			</script>
+
+		</head>
+	<body onload= do_initials()>
+		<div  align=right>
+				<a href="home">Home Page</a>
+		</div>
+		<div id="header" align = center>
+			<h2>Deposit Money</h2>
+		</div>
+		<div align="center">
+			<h5>
+				<span id="message"></span>
+			</h5>
+		</div>
+		<div align="center">
+			<form action="server/controller_action.py/deposit_money" method="post">
+				<table>
+					<input type="hidden" name="acc_number" id = "acc_number"></td>
+					<input type="hidden" name="username" id = "username"></td>
+					<tr><th></th></tr>
+					<tr>
+						<td>Account Number</td>
+						<td><label id="acc_number_label"></label></td>
+					</tr>
+					<tr>
+						<td>Account Balance</td>
+						<td><span id="acc_balance"></span></td>
+					</tr>
+					<tr>
+						<td>Amount to Deposit</td>
+						<td><input type="text" name="amount" id="amount" placeholder="Minimum two digits" required></td>
+					</tr>
+					<tr>
+						<td><input type="button" value="Deposit Money" onclick= "deposit_money()"/></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>

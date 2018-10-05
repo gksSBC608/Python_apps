@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+			<title>Transfer Money</title>
+			<style>
+				.ajax-loader {
+				visibility: hidden;
+				background-color: rgba(255,255,255,0.7);
+				position: relative;
+				z-index: +200;
+				width: 100%;
+				height:100%;
+				}
+
+				.ajax-loader img {
+				position: relative;
+				top:0%;
+				left:0%;
+				}
+			</style>
+			<script src="javascript/jquery.min.js"></script>
+			<script>
+				var threshold_balance = 1000;
+				var available_balance;
+				var submit_btn;
+				function do_initials(){
+					submit_btn = $("input[type='submit']");
+					submit_btn.prop('disabled', false);
+					var payee_acc_name_field = $("input#payee_acc_name1");
+					var payee_acc_bank_field = $("input#payee_acc_bank1");
+					payee_acc_name_field.prop('disabled', true);
+					payee_acc_bank_field.prop('disabled', true);
+					var curr_url = new URL(window.location.href);
+					//console.log(curr_url);
+					var username = curr_url.searchParams.get("username");
+					var acc_number = curr_url.searchParams.get("acc_number");
+					var home_link_el = $("[href='home']");
+					var home_url = "server/controller_action.py/render_dashboard?username="+username;
+					home_link_el.attr('href', home_url);
+					//console.log(username+', '+acc_number)
+					if(username==null || acc_number==null){
+						alert("access denied")
+						$("input").prop('disabled', true);
+					}else{
+						//console.log(username+', '+acc_number)
+						document.getElementById("acc_number").value=acc_number;
+						document.getElementById("user_id").value=username;
+						document.getElementById("acc_number_label").innerHTML=acc_number;
+						var url = "server/controller_action.py/accountbalance?acc_number="+acc_number;
+						$.get(url, function(data, status){
+							//console.log(data);
+							json = JSON.parse(data);
+							//console.log("Data: " + json + "\nStatus: " + status);
+							 var balance = json.balance;
+							 available_balance = balance;
+							 document.getElementById("acc_balance").innerHTML=json.balance;
+							 if(balance<=threshold_balance){
+							  $("input").prop('disabled', true);
+							  alert("low balance, must be more than "+threshold_balance);
+							 }
+							
+						});
+						// "₹ "
+						var beneficiaries_url = "server/controller_action.py/getpayee_accounts?username="+username;
+						
+						$.ajax({
+							type:'GET',
+							beforeSend: function(){
+								$('.ajax-loader').css("visibility", "visible");
+							},
+							url:beneficiaries_url,
+							success:function(data){
+								if(data.length<=6){
+									alert("Payee not added");
+								submit_btn.prop('disabled', true);
+								}
+							json = JSON.parse(data);
+							console.log(json);
+							var select_str = "<select name='payee_acc_number' id='payee_acc_number' style='width: 167px;'onchange='load_payee_info()'>";
+							var options ="<option value='---'>---select---</option>";
+							json.forEach(function(item){
+							console.log(item);
+							var option = "<option value="+item+">"+item+"</option>";
+							options += option;
+							});
+							//console.log(options);
+							select_str += options+"</select>";
+							//console.log(select_str);
+							document.getElementById("acc_list").innerHTML=select_str;
+							},
+							complete: function(){
+								$('.ajax-loader').css("visibility", "hidden");
+							}
+							});
+						
+						/*
+						$.get(beneficiaries_url, function(data, status){
+							if(data.length<=6){
+								alert("Payee not added");
+								submit_btn.prop('disabled', true);
+							}
+							json = JSON.parse(data);
+							console.log(json);
+							var select_str = "<select name='payee_acc_number' id='payee_acc_number' style='width: 167px;'onchange='load_payee_info()'>";
+							var options ="<option value='---'>---select---</option>";
+							json.forEach(function(item){
+							console.log(item);
+							var option = "<option value="+item+">"+item+"</option>";
+							options += option;
+							});
+							//console.log(options);
+							select_str += options+"</select>";
+							//console.log(select_str);
+							document.getElementById("acc_list").innerHTML=select_str;
+						});
+						*/
+						
+					}			
+				
+				}
+				
+				function load_payee_info(){
+					
+					var payee_acc_number = document.getElementById("payee_acc_number").value;
+					console.log(payee_acc_number);
+					if("---"===payee_acc_number){
+						document.getElementById("payee_acc_name").value= '';
+						document.getElementById("payee_acc_bank").value= '';
+					}else{
+	
+						var url = "server/controller_action.py/getpayee_data?payee_acc_number="+payee_acc_number;
+						$.get(url, function(data, status){
+							console.log(data);
+							json = JSON.parse(data);
+							console.log(json);
+							document.getElementById("payee_acc_name").value= json.ben_name;
+							document.getElementById("payee_acc_name1").value= json.ben_name;
+							document.getElementById("payee_acc_bank1").value= json.bank_name;
+							document.getElementById("payee_acc_bank").value= json.bank_name;
+						
+						});
+					}
+					
+				}
+				
+				function validate_input(){
+					var payee_acc_number = document.getElementById("payee_acc_number").value;
+					//console.log(payee_acc_number);
+					if("---"===payee_acc_number){
+						alert("Select a payee account number");
+						return false;
+					}else{
+						return true;
+					}
+					
+				}
+				
+				function validate_transfer_amount(){
+				 
+				 var amount = parseInt($("input[name='amount_to_transfer']").val());
+				 //alert(amount);
+				 console.log(amount);
+				 console.log(available_balance);
+				 console.log(threshold_balance);
+				 //var submit_btn = $("input[type='submit']");
+				 if(available_balance-amount <= threshold_balance){
+					alert("amount entered is more than the permited, account balance will go below "+threshold_balance);
+					submit_btn.prop('disabled', true);
+				 }else{
+				 submit_btn.prop('disabled', false);
+				 }
+				
+				}
+				
+			</script>
+
+		</head>
+		<body onload = do_initials()>
+		<div  align=right>
+			<a href="home">Home Page</a>
+		</div>
+		<div id="header" align = center>
+			<h2>Transfer Money</h2>
+		</div>
+		<div align="center">
+		
+		<form action="server/controller_action.py/transfer_money" method="post">
+				<input type="hidden" name="acc_number" id = "acc_number"></td>
+				<input type="hidden" name="user_id" id = "user_id"></td>
+				<table>
+					<tr><th></th></tr>
+					<tr>
+						<td>Account Number</td>
+						<td><label id="acc_number_label"></label></td>
+					</tr>
+					<tr>
+						<td>Account Balance</td>
+						<td><span id="acc_balance"></span></td>
+					</tr>
+					<tr>
+						<td>Payee Account Number</td>
+						<td><!--<input type="text" name="payee_acc_number" required>--><span id ="acc_list"></span></td>
+					</tr>
+					<tr>
+						<td>Payee Account Name</td>
+						<td>
+						<input type="hidden" name="payee_acc_name" id="payee_acc_name" required>
+						<input type="text" name="payee_acc_name1" id="payee_acc_name1" required></td>
+					</tr>
+					<tr>
+						<td>Payee Account Bank</td>
+						<td>
+						<input type="hidden" name="payee_acc_bank" id="payee_acc_bank" required>
+						<input type="text" name="payee_acc_bank1" id="payee_acc_bank1" required>
+						</td>
+					</tr>
+					<tr>
+						<td>Amount To Transfer</td>
+						<td><input type="text" name="amount_to_transfer" placeholder="Minimum two digits" onchange ="validate_transfer_amount()" required></td>
+					</tr>
+					<tr>
+						<td><input type="submit" value="Transfer" onclick="return validate_input()" /></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+			<div class="ajax-loader">
+				<img src="images/ajax-loader-1.gif" class="img-responsive" />
+			</div>
+			</div>
+		</body>
+		</body>
+	</html>

@@ -1,0 +1,20 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+{% if profile is not defined %}
+
+
+{% else %}
+
+<div align = center>
+	<table id=home>
+		{% for key,value in profile.items() %}
+		<tr><td id=home>{{key}}</td><td id=home> {{ value }}</td></tr>
+		{% endfor %}
+	</table>
+</div>
+
+{%endif %}
+	<script src="/static/js/home.js" charset="utf-8"></script>
+{% endblock %}

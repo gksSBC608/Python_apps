@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+			<title>Home Page </title>
+			<style>
+				.ajax-loader {
+				visibility: hidden;
+				background-color: rgba(255,255,255,0.7);
+				position: relative;
+				z-index: +200;
+				width: 100%;
+				height:100%;
+				}
+
+				.ajax-loader img {
+				position: relative;
+				top:0%;
+				left:0%;
+				}
+			</style>
+			<script src="javascript/jquery.min.js"></script>
+			<script>
+			function do_initials(){
+			 var x = document.getElementById("pwd_reset_form");
+			  x.style.display = "none";
+			}
+			
+			function forgotpassword(){
+			var username = document.querySelectorAll('input[name="username"]')[0].value;
+			if(username==''){
+			alert("Username is mandatory");
+			}else{
+				
+				var check_user_url = "server/controller_action.py/is_user_registered?username="+username;
+				$.ajax({
+						type:'GET',
+						beforeSend: function(){
+							$('.ajax-loader').css("visibility", "visible");
+						},
+						url:check_user_url,
+						success:function(data){
+								//console.log(data);
+								json = JSON.parse(data);
+								//json.is
+								if(json.user =='True'){
+									document.getElementById("username1").value=username;
+									document.getElementById("user_label").innerHTML=username
+									var x = document.getElementById("login_form");
+									x.style.display = "none";
+				
+									var x = document.getElementById("pwd_reset_form");
+									x.style.display = "block";
+								}else{
+									alert("User not registered");
+									console.warn("User not in database");
+								}
+							},
+							complete: function(){
+								$('.ajax-loader').css("visibility", "hidden");
+							}
+						});				
+				
+			}
+			
+			}
+			</script>
+
+		</head>
+	<body onload = "do_initials()">
+		<div  align=right>
+			<a href= "register.html">Register</a>
+		</div>
+		
+		<div  id = "login_form" align="center">
+			<div id="header" align="center">
+				<h2>Login Form</h2>
+			</div>
+			<form action="server/controller_action.py/login" method="post">
+				<table>
+					<tr><th></th></tr>
+					<tr>
+					<td>Enter Username</td>
+					<td><input type="text" name="username" required></td>
+					</tr>
+					<tr>
+						<td>Enter Password</td>
+						<td><input type="password" name="password" required></td>
+						</tr>
+						<tr><td></td><td></td></tr>
+						<tr>
+						<td><input type="submit" value="Login" /></td>
+						<td><button type="button" onclick="forgotpassword()">Forgot Password</button></td>
+						</tr>
+				</table>
+			</form>
+		</div>
+		<div  id = "pwd_reset_form" align="center">
+		<div id="header" align="center">
+				<h2>Password Reset</h2>
+		</div>
+		<form action="server/controller_action.py/reset_password" method="post">
+				<input type="text" hidden name="username"  id = "username1"/>
+				<table>
+					<tr><th></th></tr>
+					<tr><td>Username</td><td><label id="user_label"></label></td></tr>
+					<tr>
+					<td>Enter Password</td>
+					<td><input type="text" name="password" required></td>
+					</tr>
+					<tr>
+						<td>Repeat Password</td>
+						<td><input type="password" name="password1" required></td>
+						</tr>
+						
+						<tr>
+						<td><input type="submit" value="Reset Password" /></td>
+						<td></td>
+						</tr>
+				</table>
+			</form>
+		</div>
+		<div class="ajax-loader" align =center>
+				<img src="images/ajax-loader-1.gif" class="img-responsive" />
+			</div>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	   <head>
+		    <meta charset="UTF-8">
+			<title>Add Payee</title>
+			<script src="javascript/jquery.min.js"></script>
+			<script>			
+			function do_initials(){
+				var curr_url = new URL(window.location.href);
+				//console.log(curr_url);
+				var username = curr_url.searchParams.get("username");
+				var acc_number = curr_url.searchParams.get("acc_number");
+				var home_link_el = $("[href='home']");
+				var home_url = "server/controller_action.py/render_dashboard?username="+username;
+				home_link_el.attr('href', home_url);
+				//console.log(username+', '+acc_number)
+				if(username==null || acc_number==null){
+					alert("access denied");
+					$("input").prop('disabled', true);
+				}else{
+					//document.getElementById("acc_number").value=acc_number;
+					var username_el = document.getElementById("username");
+					username_el.value=username;
+					var accno_el = document.getElementById("acc_number");
+					accno_el.value=acc_number;
+				}
+				
+			 }
+			</script>
+
+		</head>
+		<body onload = do_initials()>
+		<div  align=right>
+			<a href="home">Home Page</a>
+		</div>
+		<div id="header" align = center>
+			<h2>Add Payee</h2>
+		</div>
+		<div align="center">
+		<form action="server/controller_action.py/addpayee" method="post">
+				<input type="hidden" name="acc_number" id = "acc_number"></td>
+				<input type="hidden" name="username" id = "username"></td>
+				<table>
+					<tr><th></th></tr>
+					<tr>
+						<td>Payee Account Number</td>
+						<td><input type="text" name="payee_acc_no" placeholder = "10 digits" required></td>
+					</tr>
+					<tr>
+						<td>Payee Account Name</td>
+						<td><input type="text" name="payee_acc_name" placeholder = "Title Case" required></td>
+					</tr>
+					<tr>
+						<td>Payee Account Bank</td>
+						<td><input type="text" name="payee_acc_bank" placeholder = "(Title Case)" required></td>
+					</tr>
+					<tr>
+						<td><input type="submit" value="Add Payee" /></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+			</div>
+		</body>
+	</html>

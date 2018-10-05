@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+			<title>Register Page </title>
+			<script>
+			
+			</script>
+
+		</head>
+	<body>
+		<div  align=right>
+			<a href= "/bank_application">Login</a>
+		</div>
+		<div id="header" align="center">
+				<h2>Register User</h2>
+			</div>
+		<div align="center">
+			<form action="server/controller_action.py/register" method="post">
+				<table>
+					<tr><th></th></tr>
+					<tr>
+						<td>Enter First Name</td>
+						<td><input type="text" name="firstname" placeholder="Firstname" required></td>
+					</tr>
+					<tr>
+						<td>Enter Last Name</td>
+						<td><input type="text" name="lastname" placeholder="Lastname" required></td>
+					</tr>
+					<tr>
+						<td>Enter Bank Name</td>
+						<td><input type="text" name="bankname" placeholder="Title Case" required></td>
+					</tr>
+					
+					<tr>
+						<td>Enter User Name</td>
+						<td><input type="text" name="username" placeholder="alpha numeric" required></td>
+					</tr>
+					<tr>
+						<td>Enter Password</td>
+						<td><input type="text" name="password" required></td>
+					</tr>
+					<tr>
+						<td>Repeat Password</td>
+						<td><input type="password" name="password1" required></td>
+					</tr>
+					<tr>
+						<td><input type="submit" value="Register" /></td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</html>
